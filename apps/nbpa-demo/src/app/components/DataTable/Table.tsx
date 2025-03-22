@@ -28,16 +28,17 @@ const StatsContainer = styled(motion.div)`
   width: 100%;
 `;
 
-const StatBox = styled(motion.div)`
+const StatBox = styled(motion.div)<{ end?: boolean }>`
   display: flex;
   flex-direction: column;
+  align-items: ${({ end }) => (end ? 'flex-end' : 'flex-start')};
 `;
 
-const StatLabel = styled(motion.div)`
+const StatLabel = styled.span`
   font-size: 0.875rem;
 `;
 
-const StatValue = styled(motion.div)`
+const StatValue = styled.span`
   font-size: 2rem;
   font-weight: bold;
 `;
@@ -104,8 +105,17 @@ const TableBody = styled(motion.tbody)`
 `;
 
 const TableRow = styled(motion.tr)<{ isLast?: boolean }>`
-  border-bottom: 1px solid ${colorScheme.white};
-  ${({ isLast }) => isLast && `border-bottom: none;`}
+  & > td {
+    border-bottom: 1px solid ${colorScheme.white};
+  }
+
+  ${({ isLast }) =>
+    isLast &&
+    `
+    & > td {
+      border-bottom: none;
+    }
+  `}
 `;
 
 const TableCell = styled.td<{ isZero?: boolean }>`
@@ -127,10 +137,11 @@ const PaginationContainer = styled(motion.div)`
   padding: 0.5rem 1rem;
 `;
 
-const PaginationButton = styled(motion.button)`
+const PaginationButton = styled(motion.button)<{ isEnd?: boolean }>`
   background: none;
   border: none;
-  color: ${colorScheme.white};
+  color: ${({ isEnd }) =>
+    isEnd ? colorScheme.backgroundDarker : colorScheme.white};
   font-size: 1rem;
   cursor: pointer;
   border-radius: 4px;
@@ -175,14 +186,12 @@ export const Table = () => {
     <ViewContainer initial="hidden" animate="visible" variants={fadeIn}>
       <StatsContainer variants={fadeIn}>
         <StatBox variants={fadeIn}>
-          <StatLabel variants={fadeIn}>Hours Tracked</StatLabel>
-          <StatValue variants={fadeIn}>{totalHours.toFixed(2)}</StatValue>
+          <StatLabel>Hours Tracked</StatLabel>
+          <StatValue>{totalHours.toFixed(2)}</StatValue>
         </StatBox>
-        <StatBox variants={fadeIn}>
-          <StatLabel variants={fadeIn}>Billable Amount</StatLabel>
-          <StatValue variants={fadeIn}>
-            {formatCurrency(totalBillableAmount, false)}
-          </StatValue>
+        <StatBox variants={fadeIn} end>
+          <StatLabel>Billable Amount</StatLabel>
+          <StatValue>{formatCurrency(totalBillableAmount, false)}</StatValue>
         </StatBox>
       </StatsContainer>
       <ClientContainer variants={fadeIn}>
@@ -240,8 +249,9 @@ export const Table = () => {
         <PageInfo variants={fadeIn}>{page + 1}</PageInfo>
         <PaginationButton
           onClick={handleNextPage}
-          disabled={!timesheets || timesheets.length < pageSize}
           variants={fadeIn}
+          disabled={!timesheets || timesheets.length < pageSize}
+          isEnd={!timesheets || timesheets.length < pageSize}
         >
           Next
         </PaginationButton>

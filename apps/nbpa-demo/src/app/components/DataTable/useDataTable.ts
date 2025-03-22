@@ -47,6 +47,7 @@ export function useDataTable() {
 
   const selectClient = (client: string | undefined) => {
     setClient(client);
+    setPage(0);
     queryClient.invalidateQueries({
       queryKey: ['timesheets', client, skip, pageSize],
     });
@@ -91,6 +92,10 @@ export function useDataTable() {
     [formattedTimesheets]
   );
 
+  const hasNextPage = useMemo(() => {
+    return timesheets && timesheets.length === pageSize;
+  }, [timesheets]);
+
   return {
     isPending,
     error,
@@ -104,6 +109,7 @@ export function useDataTable() {
     handleNextPage,
     page,
     pageSize,
+    hasNextPage,
   };
 }
 
