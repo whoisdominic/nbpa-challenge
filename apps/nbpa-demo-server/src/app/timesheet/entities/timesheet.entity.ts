@@ -1,8 +1,7 @@
-import { TimeEntry } from '@nbpa-demo/types';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
-export class Timesheet implements TimeEntry {
+export class Timesheet {
   @PrimaryGeneratedColumn()
   id: number = 0;
 

@@ -1,6 +1,6 @@
-import { CreateTimesheetDto, UpdateTimesheetDto } from '@nbpa-demo/types';
 import { API_URL } from './constants';
 import axios from 'axios';
+import { CreateTimesheetDto, UpdateTimesheetDto } from './types';
 
 class TimesheetService {
   private readonly apiUrl: string;

@@ -20,9 +20,6 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "rootDir": ".",
-    "baseUrl": ".",
-    "paths": {
-      "@nbpa-demo/types": ["libs/types/src/index.ts"]
-    }
+    "baseUrl": "."
   }
 }

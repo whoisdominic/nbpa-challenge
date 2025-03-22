@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { timesheetService } from '../../timesheetService';
-import { CreateTimesheetDto, TimeEntry } from '@nbpa-demo/types';
 import { useMemo, useState } from 'react';
+import { CreateTimesheetDto, TimeEntry } from '../../types';
 
 interface TableEntry {
   name: string;
