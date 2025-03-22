@@ -22,7 +22,7 @@
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "@nbpa-demo/dtos": ["libs/dtos/src/index.ts"]
+      "@nbpa-demo/types": ["libs/types/src/index.ts"]
     }
   }
 }

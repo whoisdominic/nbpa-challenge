@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Timesheet } from './entities/timesheet.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateTimesheetDto, UpdateTimesheetDto } from '@nbpa-demo/dtos';
+import { CreateTimesheetDto, UpdateTimesheetDto } from '@nbpa-demo/types';
 
 @Injectable()
 export class TimesheetService {

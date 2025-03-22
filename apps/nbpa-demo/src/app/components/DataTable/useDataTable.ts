@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { timesheetService } from '../../timesheetService';
-import { CreateTimesheetDto } from '@nbpa-demo/dtos';
+import { CreateTimesheetDto } from '@nbpa-demo/types';
 
 interface UseDataTableProps {
   mode?: {
