@@ -4,10 +4,10 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/nbpa-demo-server-e2e"
+      "path": "./apps/nbpa-demo-server"
     },
     {
-      "path": "./apps/nbpa-demo-server"
+      "path": "./apps/nbpa-demo"
     }
   ]
 }
