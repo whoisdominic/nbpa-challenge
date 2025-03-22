@@ -1,17 +1,15 @@
+/* eslint-disable jsx-a11y/accessible-emoji */
 import styled from 'styled-components';
 import { useDataTable } from './useDataTable';
 import { colorScheme } from '../../constants';
-import { useMemo } from 'react';
+import { motion } from 'framer-motion';
 
-interface ProjectSummary {
-  name: string;
-  client: string;
-  totalHours: number;
-  billableHours: number;
-  billableAmount: number;
-}
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.5 } },
+};
 
-const ViewContainer = styled.div`
+const ViewContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,17 +17,54 @@ const ViewContainer = styled.div`
   max-width: 90vw;
 `;
 
-const SummaryContainer = styled.div`
-  margin-bottom: 1rem;
+// Stats
+//
+const StatsContainer = styled(motion.div)`
+  display: flex;
+  justify-content: space-between;
   width: 100%;
 `;
 
-const SummaryText = styled.span`
-  color: ${colorScheme.white};
+const StatBox = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+`;
+
+const StatLabel = styled(motion.div)`
   font-size: 0.875rem;
 `;
 
-const TableContainer = styled.div`
+const StatValue = styled(motion.div)`
+  font-size: 2rem;
+  font-weight: bold;
+`;
+
+// Summary
+//
+const ClientContainer = styled(motion.div)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 8px;
+  width: 100%;
+`;
+
+const ClientText = styled(motion.span)<{ colored?: boolean }>`
+  color: ${({ colored }) =>
+    colored ? colorScheme.white : colorScheme.primary};
+  font-size: 1.5rem;
+  font-weight: 800;
+`;
+
+const ClientExit = styled(motion.span)`
+  cursor: pointer;
+  font-size: 1.5rem;
+`;
+
+// Table
+//
+const TableContainer = styled(motion.div)`
   border-radius: 8px;
   overflow: auto;
   width: 100%;
@@ -38,17 +73,17 @@ const TableContainer = styled.div`
   box-shadow: 0 0 0 1px ${colorScheme.white};
 `;
 
-const StyledTable = styled.table`
+const StyledTable = styled(motion.table)`
   min-width: 100%;
   border-collapse: separate;
   border-spacing: 0;
 `;
 
-const TableHead = styled.thead`
+const TableHead = styled(motion.thead)`
   background-color: ${colorScheme.white};
 `;
 
-const TableHeaderCell = styled.th`
+const TableHeaderCell = styled(motion.th)`
   padding: 0.75rem 1.5rem;
   text-align: left;
   font-size: 0.75rem;
@@ -58,25 +93,25 @@ const TableHeaderCell = styled.th`
   letter-spacing: 0.05em;
 `;
 
-const TableBody = styled.tbody`
+const TableBody = styled(motion.tbody)`
   background-color: ${colorScheme.primary};
 `;
 
-const TableRow = styled.tr<{ isLast?: boolean }>`
+const TableRow = styled(motion.tr)<{ isLast?: boolean }>`
   border-bottom: 1px solid ${colorScheme.white};
   ${({ isLast }) => isLast && `border-bottom: none;`}
 `;
 
-const TableCell = styled.td`
+const TableCell = styled(motion.td)<{ isZero?: boolean }>`
   padding: 1rem 1.5rem;
-  white-space: nowrap;
   font-size: 0.875rem;
-  color: ${colorScheme.white};
   cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
-  background-color: ${colorScheme.primary};
 `;
 
-const formatCurrency = (amount: number) => {
+const formatCurrency = (amount: number, handleZero = false) => {
+  if (amount === 0 && handleZero) {
+    return '-';
+  }
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -85,67 +120,77 @@ const formatCurrency = (amount: number) => {
 
 export const Table = () => {
   const {
-    data: timesheets,
     activeClient,
     setClient,
-  } = useDataTable({ take: 20, skip: 0 });
-
-  // Group and summarize data by project
-  const projectSummaries = useMemo(() => {
-    return timesheets.reduce((acc: ProjectSummary[], entry) => {
-      const existingProject = acc.find((p) => p.name === entry.project);
-
-      if (existingProject) {
-        existingProject.totalHours += entry.hours;
-        if (entry.billable) {
-          existingProject.billableHours += entry.hours;
-          existingProject.billableAmount += entry.hours * entry.billableRate;
-        }
-      } else {
-        acc.push({
-          name: entry.project,
-          client: entry.client,
-          totalHours: entry.hours,
-          billableHours: entry.billable ? entry.hours : 0,
-          billableAmount: entry.billable ? entry.hours * entry.billableRate : 0,
-        });
-      }
-      return acc;
-    }, []);
-  }, [timesheets]);
+    totalHours,
+    totalBillableAmount,
+    projectSummaries,
+  } = useDataTable({ take: 10, skip: 0 });
 
   return (
-    <ViewContainer>
-      <SummaryContainer>
-        <SummaryText>Client: {activeClient}</SummaryText>
-      </SummaryContainer>
-      <TableContainer>
-        <StyledTable>
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>Name</TableHeaderCell>
-              <TableHeaderCell>Clients</TableHeaderCell>
-              <TableHeaderCell>Hours</TableHeaderCell>
-              <TableHeaderCell>Billable Hours</TableHeaderCell>
-              <TableHeaderCell>Billable Amount</TableHeaderCell>
+    <ViewContainer initial="hidden" animate="visible" variants={fadeIn}>
+      <StatsContainer variants={fadeIn}>
+        <StatBox variants={fadeIn}>
+          <StatLabel variants={fadeIn}>Hours Tracked</StatLabel>
+          <StatValue variants={fadeIn}>{totalHours.toFixed(2)}</StatValue>
+        </StatBox>
+        <StatBox variants={fadeIn}>
+          <StatLabel variants={fadeIn}>Billable Amount</StatLabel>
+          <StatValue variants={fadeIn}>
+            {formatCurrency(totalBillableAmount, false)}
+          </StatValue>
+        </StatBox>
+      </StatsContainer>
+      <ClientContainer variants={fadeIn}>
+        <ClientText variants={fadeIn}>Client:</ClientText>
+        <ClientText colored variants={fadeIn}>
+          {activeClient}
+        </ClientText>
+        {activeClient && (
+          <ClientExit variants={fadeIn} onClick={() => setClient(undefined)}>
+            ❌
+          </ClientExit>
+        )}
+      </ClientContainer>
+      <TableContainer variants={fadeIn}>
+        <StyledTable variants={fadeIn}>
+          <TableHead variants={fadeIn}>
+            <TableRow variants={fadeIn}>
+              <TableHeaderCell variants={fadeIn}>Name</TableHeaderCell>
+              <TableHeaderCell variants={fadeIn}>Clients</TableHeaderCell>
+              <TableHeaderCell variants={fadeIn}>Hours</TableHeaderCell>
+              <TableHeaderCell variants={fadeIn}>
+                Billable Hours
+              </TableHeaderCell>
+              <TableHeaderCell variants={fadeIn}>
+                Billable Amount
+              </TableHeaderCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody variants={fadeIn}>
             {projectSummaries.map((summary, index) => (
               <TableRow
                 key={index}
                 isLast={index === projectSummaries.length - 1}
+                variants={fadeIn}
               >
-                <TableCell>{summary.name}</TableCell>
+                <TableCell variants={fadeIn}>{summary.name}</TableCell>
                 <TableCell
                   onClick={() => setClient(summary.client)}
                   style={{ minWidth: '120px' }}
+                  variants={fadeIn}
                 >
                   {summary.client}
                 </TableCell>
-                <TableCell>{summary.totalHours.toFixed(2)}</TableCell>
-                <TableCell>{summary.billableHours.toFixed(2)}</TableCell>
-                <TableCell>{formatCurrency(summary.billableAmount)}</TableCell>
+                <TableCell variants={fadeIn}>
+                  {summary.totalHours.toFixed(2)}
+                </TableCell>
+                <TableCell variants={fadeIn}>
+                  {summary.billableHours.toFixed(2)}
+                </TableCell>
+                <TableCell variants={fadeIn}>
+                  {formatCurrency(summary.billableAmount, true)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
