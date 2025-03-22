@@ -1,5 +1,8 @@
 import styled from 'styled-components';
-import NxWelcome from './nx-welcome';
+import { Table } from './DataTable';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const StyledApp = styled.div`
   // Your style here
@@ -7,9 +10,11 @@ const StyledApp = styled.div`
 
 export function App() {
   return (
-    <StyledApp>
-      <NxWelcome title="nbpa-demo" />
-    </StyledApp>
+    <QueryClientProvider client={queryClient}>
+      <StyledApp>
+        <Table />
+      </StyledApp>
+    </QueryClientProvider>
   );
 }
 
