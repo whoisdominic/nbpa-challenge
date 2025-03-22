@@ -9,8 +9,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { TimesheetService } from './timesheet.service';
-import { CreateTimesheetDto } from './dto/create-timesheet.dto';
-import { UpdateTimesheetDto } from './dto/update-timesheet.dto';
+import { CreateTimesheetDto, UpdateTimesheetDto } from '@nbpa-demo/dtos';
 
 @Controller('timesheet')
 export class TimesheetController {

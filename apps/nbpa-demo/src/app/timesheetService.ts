@@ -1,5 +1,6 @@
 import { API_URL } from './constants';
 import axios from 'axios';
+import { CreateTimesheetDto, UpdateTimesheetDto } from '@nbpa-demo/dtos';
 
 class TimesheetService {
   private readonly apiUrl: string;
@@ -19,12 +20,12 @@ class TimesheetService {
     return response.data;
   }
 
-  async createTimesheet(data: any) {
+  async createTimesheet(data: CreateTimesheetDto) {
     const response = await axios.post(`${this.apiUrl}/timesheet`, data);
     return response.data;
   }
 
-  async updateTimesheet(id: string, data: any) {
+  async updateTimesheet(id: string, data: UpdateTimesheetDto) {
     const response = await axios.put(`${this.apiUrl}/timesheet/${id}`, data);
     return response.data;
   }

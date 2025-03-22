@@ -6,8 +6,8 @@
     "importHelpers": true,
     "isolatedModules": true,
     "lib": ["es2022"],
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "esnext",
+    "moduleResolution": "node",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
@@ -18,6 +18,11 @@
     "target": "es2022",
     "strictPropertyInitialization": false,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@nbpa-demo/dtos": ["libs/dtos/src/index.ts"]
+    }
   }
 }

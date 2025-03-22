@@ -1,16 +1,21 @@
 import styled from 'styled-components';
-import { Table } from './DataTable';
+import { CSSReset, Table } from './components';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { colorScheme } from './constants';
 
 const queryClient = new QueryClient();
 
 const StyledApp = styled.div`
-  // Your style here
+  background-color: ${colorScheme.background};
+  color: ${colorScheme.white};
+  height: 100%;
+  width: 100%;
 `;
 
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <CSSReset />
       <StyledApp>
         <Table />
       </StyledApp>
