@@ -10,6 +10,9 @@ const StyledApp = styled.div`
   color: ${colorScheme.white};
   height: 100%;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
 `;
 
 export function App() {

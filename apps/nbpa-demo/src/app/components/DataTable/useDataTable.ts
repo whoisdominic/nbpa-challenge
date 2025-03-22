@@ -1,25 +1,24 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { timesheetService } from '../../timesheetService';
-import { CreateTimesheetDto } from '@nbpa-demo/types';
+import { CreateTimesheetDto, TimeEntry } from '@nbpa-demo/types';
+import { useState } from 'react';
 
 interface UseDataTableProps {
-  mode?: {
-    client?: string;
-    skip?: number;
-    take?: number;
-  };
+  skip?: number;
+  take?: number;
 }
 
-export function useDataTable({ mode }: UseDataTableProps = {}) {
+export function useDataTable({ skip, take }: UseDataTableProps = {}) {
   const queryClient = useQueryClient();
+  const [client, setClient] = useState<string | undefined>(undefined);
 
-  const { isPending, error, data } = useQuery({
-    queryKey: ['timesheets', mode],
+  const { isPending, error, data } = useQuery<TimeEntry[]>({
+    queryKey: ['timesheets', client],
     queryFn: () => {
       const params = {
-        skip: mode?.skip ?? 0,
-        take: mode?.take ?? 20,
-        ...(mode?.client && { client: mode.client }),
+        skip: skip ?? 0,
+        take: take ?? 20,
+        ...(client && { client: client }),
       };
       return timesheetService.getAllTimesheets(
         params.skip,
@@ -40,8 +39,10 @@ export function useDataTable({ mode }: UseDataTableProps = {}) {
   return {
     isPending,
     error,
-    data,
+    data: data ?? [],
     createTimesheet: createMutation.mutate,
+    setClient,
+    activeClient: client,
   };
 }
 
