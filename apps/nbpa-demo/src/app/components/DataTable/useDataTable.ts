@@ -8,7 +8,7 @@ interface UseDataTableProps {
   take?: number;
 }
 
-interface ProjectSummary {
+interface TableEntry {
   name: string;
   client: string;
   totalHours: number;
@@ -48,68 +48,46 @@ export function useDataTable({ skip, take }: UseDataTableProps = {}) {
     },
   });
 
-  // Group and summarize data by project
-  const projectSummaries = useMemo(() => {
-    return timesheets?.reduce((acc: ProjectSummary[], entry) => {
-      const existingProject = acc.find((p) => p.name === entry.project);
-
-      if (existingProject) {
-        existingProject.totalHours += entry.hours;
-        if (entry.billable) {
-          existingProject.billableHours += entry.hours;
-          existingProject.billableAmount += entry.hours * entry.billableRate;
+  // Format timesheet entries with calculated billable amounts and filter by client
+  const formattedTimesheets = useMemo(() => {
+    return (
+      timesheets?.reduce((acc, entry) => {
+        if (!client || entry.client === client) {
+          acc.push({
+            name: `${entry.firstName} ${entry.lastName}`,
+            client: entry.client,
+            totalHours: entry.hours,
+            billableHours: entry.billable ? entry.hours : 0,
+            billableAmount: entry.billable
+              ? entry.hours * entry.billableRate
+              : 0,
+          });
         }
-      } else {
-        acc.push({
-          name: entry.project,
-          client: entry.client,
-          totalHours: entry.hours,
-          billableHours: entry.billable ? entry.hours : 0,
-          billableAmount: entry.billable ? entry.hours * entry.billableRate : 0,
-        });
-      }
-      return acc;
-    }, []);
-  }, [timesheets]);
+        return acc;
+      }, [] as TableEntry[]) ?? []
+    );
+  }, [timesheets, client]);
 
   const totalHours = useMemo(
-    () =>
-      projectSummaries?.reduce(
-        (sum, project) =>
-          client
-            ? project.client === client
-              ? sum + project.totalHours
-              : sum
-            : sum + project.totalHours,
-        0
-      ),
-    [projectSummaries, client]
+    () => formattedTimesheets.reduce((sum, entry) => sum + entry.totalHours, 0),
+    [formattedTimesheets]
   );
 
   const totalBillableAmount = useMemo(
     () =>
-      projectSummaries?.reduce(
-        (sum, project) =>
-          client
-            ? project.client === client
-              ? sum + project.billableAmount
-              : sum
-            : sum + project.billableAmount,
-        0
-      ),
-    [projectSummaries, client]
+      formattedTimesheets.reduce((sum, entry) => sum + entry.billableAmount, 0),
+    [formattedTimesheets]
   );
 
   return {
     isPending,
     error,
-    data: timesheets ?? [],
+    timesheets: formattedTimesheets,
     createTimesheet: createMutation.mutate,
     setClient,
     activeClient: client,
-    totalHours: totalHours ?? 0,
-    totalBillableAmount: totalBillableAmount ?? 0,
-    projectSummaries: projectSummaries ?? [],
+    totalHours,
+    totalBillableAmount,
   };
 }
 

@@ -50,7 +50,7 @@ const ClientContainer = styled(motion.div)`
   width: 100%;
 `;
 
-const ClientText = styled(motion.span)<{ colored?: boolean }>`
+const ClientText = styled.span<{ colored?: boolean }>`
   color: ${({ colored }) =>
     colored ? colorScheme.white : colorScheme.primary};
   font-size: 1.5rem;
@@ -59,7 +59,8 @@ const ClientText = styled(motion.span)<{ colored?: boolean }>`
 
 const ClientExit = styled(motion.span)`
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 1.15rem;
+  margin-top: 2px;
 `;
 
 // Table
@@ -68,22 +69,20 @@ const TableContainer = styled(motion.div)`
   border-radius: 8px;
   overflow: auto;
   width: 100%;
-  height: 80vh;
-  min-height: 80vh;
   box-shadow: 0 0 0 1px ${colorScheme.white};
 `;
 
-const StyledTable = styled(motion.table)`
+const StyledTable = styled.table`
   min-width: 100%;
   border-collapse: separate;
   border-spacing: 0;
 `;
 
-const TableHead = styled(motion.thead)`
+const TableHead = styled.thead`
   background-color: ${colorScheme.white};
 `;
 
-const TableHeaderCell = styled(motion.th)`
+const TableHeaderCell = styled.th`
   padding: 0.75rem 1.5rem;
   text-align: left;
   font-size: 0.75rem;
@@ -102,7 +101,7 @@ const TableRow = styled(motion.tr)<{ isLast?: boolean }>`
   ${({ isLast }) => isLast && `border-bottom: none;`}
 `;
 
-const TableCell = styled(motion.td)<{ isZero?: boolean }>`
+const TableCell = styled.td<{ isZero?: boolean }>`
   padding: 1rem 1.5rem;
   font-size: 0.875rem;
   cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
@@ -124,7 +123,7 @@ export const Table = () => {
     setClient,
     totalHours,
     totalBillableAmount,
-    projectSummaries,
+    timesheets,
   } = useDataTable({ take: 10, skip: 0 });
 
   return (
@@ -142,10 +141,8 @@ export const Table = () => {
         </StatBox>
       </StatsContainer>
       <ClientContainer variants={fadeIn}>
-        <ClientText variants={fadeIn}>Client:</ClientText>
-        <ClientText colored variants={fadeIn}>
-          {activeClient}
-        </ClientText>
+        <ClientText>Client:</ClientText>
+        <ClientText colored>{activeClient ?? 'All'}</ClientText>
         {activeClient && (
           <ClientExit variants={fadeIn} onClick={() => setClient(undefined)}>
             ❌
@@ -153,42 +150,33 @@ export const Table = () => {
         )}
       </ClientContainer>
       <TableContainer variants={fadeIn}>
-        <StyledTable variants={fadeIn}>
-          <TableHead variants={fadeIn}>
+        <StyledTable>
+          <TableHead>
             <TableRow variants={fadeIn}>
-              <TableHeaderCell variants={fadeIn}>Name</TableHeaderCell>
-              <TableHeaderCell variants={fadeIn}>Clients</TableHeaderCell>
-              <TableHeaderCell variants={fadeIn}>Hours</TableHeaderCell>
-              <TableHeaderCell variants={fadeIn}>
-                Billable Hours
-              </TableHeaderCell>
-              <TableHeaderCell variants={fadeIn}>
-                Billable Amount
-              </TableHeaderCell>
+              <TableHeaderCell>Name</TableHeaderCell>
+              <TableHeaderCell>Clients</TableHeaderCell>
+              <TableHeaderCell>Hours</TableHeaderCell>
+              <TableHeaderCell>Billable Hours</TableHeaderCell>
+              <TableHeaderCell>Billable Amount</TableHeaderCell>
             </TableRow>
           </TableHead>
           <TableBody variants={fadeIn}>
-            {projectSummaries.map((summary, index) => (
+            {timesheets.map((summary, index) => (
               <TableRow
                 key={index}
-                isLast={index === projectSummaries.length - 1}
+                isLast={index === timesheets.length - 1}
                 variants={fadeIn}
               >
-                <TableCell variants={fadeIn}>{summary.name}</TableCell>
+                <TableCell>{summary.name}</TableCell>
                 <TableCell
                   onClick={() => setClient(summary.client)}
                   style={{ minWidth: '120px' }}
-                  variants={fadeIn}
                 >
                   {summary.client}
                 </TableCell>
-                <TableCell variants={fadeIn}>
-                  {summary.totalHours.toFixed(2)}
-                </TableCell>
-                <TableCell variants={fadeIn}>
-                  {summary.billableHours.toFixed(2)}
-                </TableCell>
-                <TableCell variants={fadeIn}>
+                <TableCell>{summary.totalHours.toFixed(2)}</TableCell>
+                <TableCell>{summary.billableHours.toFixed(2)}</TableCell>
+                <TableCell>
                   {formatCurrency(summary.billableAmount, true)}
                 </TableCell>
               </TableRow>
