@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/nbpa-demo-server-e2e"
+    },
+    {
+      "path": "./apps/nbpa-demo-server"
+    }
+  ]
+}
