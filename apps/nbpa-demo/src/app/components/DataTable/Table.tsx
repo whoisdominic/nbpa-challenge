@@ -95,13 +95,15 @@ const TableHeaderCell = styled.th`
   text-transform: uppercase;
   color: ${colorScheme.primary};
   letter-spacing: 0.05em;
+  width: 20%;
+  min-width: 150px;
 `;
 
 const TableBody = styled(motion.tbody)`
   background-color: ${colorScheme.primary};
 `;
 
-const TableRow = styled.tr<{ isLast?: boolean }>`
+const TableRow = styled(motion.tr)<{ isLast?: boolean }>`
   border-bottom: 1px solid ${colorScheme.white};
   ${({ isLast }) => isLast && `border-bottom: none;`}
 `;
@@ -205,7 +207,11 @@ export const Table = () => {
           </TableHead>
           <TableBody variants={fadeIn}>
             {timesheets.map((summary, index) => (
-              <TableRow key={index} isLast={index === timesheets.length - 1}>
+              <TableRow
+                key={index}
+                isLast={index === timesheets.length - 1}
+                variants={fadeIn}
+              >
                 <TableCell>{summary.name}</TableCell>
                 <TableCell
                   onClick={() => selectClient(summary.client)}
