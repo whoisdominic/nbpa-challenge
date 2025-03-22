@@ -3,13 +3,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { TimesheetModule } from './timesheet/timesheet.module';
+import { Timesheet } from './timesheet/entities/timesheet.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: ':memory:',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      entities: [Timesheet],
       synchronize: true,
     }),
     ThrottlerModule.forRoot({
@@ -20,6 +22,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         },
       ],
     }),
+    TimesheetModule,
   ],
   controllers: [AppController],
   providers: [AppService],
