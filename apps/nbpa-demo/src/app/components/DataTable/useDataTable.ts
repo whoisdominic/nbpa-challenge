@@ -3,11 +3,6 @@ import { timesheetService } from '../../timesheetService';
 import { CreateTimesheetDto, TimeEntry } from '@nbpa-demo/types';
 import { useMemo, useState } from 'react';
 
-interface UseDataTableProps {
-  skip?: number;
-  take?: number;
-}
-
 interface TableEntry {
   name: string;
   client: string;
@@ -15,21 +10,23 @@ interface TableEntry {
   billableHours: number;
   billableAmount: number;
 }
+const pageSize = 10;
 
-export function useDataTable({ skip, take }: UseDataTableProps = {}) {
+export function useDataTable() {
   const queryClient = useQueryClient();
   const [client, setClient] = useState<string | undefined>(undefined);
-
+  const [page, setPage] = useState(0);
+  const skip = page * pageSize;
   const {
     isPending,
     error,
     data: timesheets,
   } = useQuery<TimeEntry[]>({
-    queryKey: ['timesheets', client],
+    queryKey: ['timesheets', client, skip, pageSize],
     queryFn: () => {
       const params = {
         skip: skip ?? 0,
-        take: take ?? 20,
+        take: pageSize,
         ...(client && { client: client }),
       };
       return timesheetService.getAllTimesheets(
@@ -39,6 +36,21 @@ export function useDataTable({ skip, take }: UseDataTableProps = {}) {
       );
     },
   });
+
+  const handlePreviousPage = () => {
+    setPage((prev) => Math.max(0, prev - 1));
+  };
+
+  const handleNextPage = () => {
+    setPage((prev) => prev + 1);
+  };
+
+  const selectClient = (client: string | undefined) => {
+    setClient(client);
+    queryClient.invalidateQueries({
+      queryKey: ['timesheets', client, skip, pageSize],
+    });
+  };
 
   const createMutation = useMutation({
     mutationFn: (newTimesheet: CreateTimesheetDto) =>
@@ -84,10 +96,14 @@ export function useDataTable({ skip, take }: UseDataTableProps = {}) {
     error,
     timesheets: formattedTimesheets,
     createTimesheet: createMutation.mutate,
-    setClient,
+    selectClient,
     activeClient: client,
     totalHours,
     totalBillableAmount,
+    handlePreviousPage,
+    handleNextPage,
+    page,
+    pageSize,
   };
 }
 

@@ -13,8 +13,11 @@ const ViewContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   width: 1200px;
   max-width: 90vw;
+  /* background-color: red; */
+  height: 90%;
 `;
 
 // Stats
@@ -65,11 +68,13 @@ const ClientExit = styled(motion.span)`
 
 // Table
 //
-const TableContainer = styled(motion.div)`
+const TableContainer = styled.div`
   border-radius: 8px;
   overflow: auto;
   width: 100%;
   box-shadow: 0 0 0 1px ${colorScheme.white};
+  flex: 1;
+  display: flex;
 `;
 
 const StyledTable = styled.table`
@@ -96,7 +101,7 @@ const TableBody = styled(motion.tbody)`
   background-color: ${colorScheme.primary};
 `;
 
-const TableRow = styled(motion.tr)<{ isLast?: boolean }>`
+const TableRow = styled.tr<{ isLast?: boolean }>`
   border-bottom: 1px solid ${colorScheme.white};
   ${({ isLast }) => isLast && `border-bottom: none;`}
 `;
@@ -105,6 +110,40 @@ const TableCell = styled.td<{ isZero?: boolean }>`
   padding: 1rem 1.5rem;
   font-size: 0.875rem;
   cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
+`;
+
+// Pagination
+const PaginationContainer = styled(motion.div)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  background-color: ${colorScheme.primary};
+  border-radius: 8px;
+  border: 1px solid ${colorScheme.white};
+  padding: 0.5rem 1rem;
+`;
+
+const PaginationButton = styled(motion.button)`
+  background: none;
+  border: none;
+  color: ${colorScheme.white};
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  &:hover:not(:disabled) {
+    background-color: ${colorScheme.white}20;
+  }
+`;
+
+const PageInfo = styled(motion.span)`
+  font-size: 0.875rem;
+  font-weight: 800;
 `;
 
 const formatCurrency = (amount: number, handleZero = false) => {
@@ -120,11 +159,15 @@ const formatCurrency = (amount: number, handleZero = false) => {
 export const Table = () => {
   const {
     activeClient,
-    setClient,
     totalHours,
     totalBillableAmount,
     timesheets,
-  } = useDataTable({ take: 10, skip: 0 });
+    selectClient,
+    handlePreviousPage,
+    handleNextPage,
+    page,
+    pageSize,
+  } = useDataTable();
 
   return (
     <ViewContainer initial="hidden" animate="visible" variants={fadeIn}>
@@ -144,15 +187,15 @@ export const Table = () => {
         <ClientText>Client:</ClientText>
         <ClientText colored>{activeClient ?? 'All'}</ClientText>
         {activeClient && (
-          <ClientExit variants={fadeIn} onClick={() => setClient(undefined)}>
+          <ClientExit variants={fadeIn} onClick={() => selectClient(undefined)}>
             ❌
           </ClientExit>
         )}
       </ClientContainer>
-      <TableContainer variants={fadeIn}>
+      <TableContainer>
         <StyledTable>
           <TableHead>
-            <TableRow variants={fadeIn}>
+            <TableRow>
               <TableHeaderCell>Name</TableHeaderCell>
               <TableHeaderCell>Clients</TableHeaderCell>
               <TableHeaderCell>Hours</TableHeaderCell>
@@ -162,14 +205,10 @@ export const Table = () => {
           </TableHead>
           <TableBody variants={fadeIn}>
             {timesheets.map((summary, index) => (
-              <TableRow
-                key={index}
-                isLast={index === timesheets.length - 1}
-                variants={fadeIn}
-              >
+              <TableRow key={index} isLast={index === timesheets.length - 1}>
                 <TableCell>{summary.name}</TableCell>
                 <TableCell
-                  onClick={() => setClient(summary.client)}
+                  onClick={() => selectClient(summary.client)}
                   style={{ minWidth: '120px' }}
                 >
                   {summary.client}
@@ -184,6 +223,23 @@ export const Table = () => {
           </TableBody>
         </StyledTable>
       </TableContainer>
+      <PaginationContainer variants={fadeIn}>
+        <PaginationButton
+          onClick={handlePreviousPage}
+          disabled={page === 0}
+          variants={fadeIn}
+        >
+          Prev
+        </PaginationButton>
+        <PageInfo variants={fadeIn}>{page + 1}</PageInfo>
+        <PaginationButton
+          onClick={handleNextPage}
+          disabled={!timesheets || timesheets.length < pageSize}
+          variants={fadeIn}
+        >
+          Next
+        </PaginationButton>
+      </PaginationContainer>
     </ViewContainer>
   );
 };
