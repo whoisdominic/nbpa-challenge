@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import * as fs from 'fs';
 import * as path from 'path';
-import Papa from 'papaparse';
+import * as Papa from 'papaparse';
 import { Timesheet } from './entities/timesheet.entity';
 
 interface TimesheetCSVRow {
