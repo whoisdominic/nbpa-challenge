@@ -16,7 +16,6 @@ const ViewContainer = styled(motion.div)`
   justify-content: space-between;
   width: 1200px;
   max-width: 90vw;
-  /* background-color: red; */
   height: 90%;
 `;
 
@@ -122,6 +121,7 @@ const TableCell = styled.td<{ isZero?: boolean }>`
   padding: 1rem 1.5rem;
   font-size: 0.875rem;
   cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
+  text-decoration: ${(props) => (props.onClick ? 'underline' : 'none')};
 `;
 
 // Pagination
@@ -222,10 +222,7 @@ export const Table = () => {
                 variants={fadeIn}
               >
                 <TableCell>{summary.name}</TableCell>
-                <TableCell
-                  onClick={() => selectClient(summary.client)}
-                  style={{ minWidth: '120px' }}
-                >
+                <TableCell onClick={() => selectClient(summary.client)}>
                   {summary.client}
                 </TableCell>
                 <TableCell>{summary.totalHours.toFixed(2)}</TableCell>

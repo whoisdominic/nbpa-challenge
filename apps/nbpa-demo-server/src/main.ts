@@ -8,7 +8,7 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   app.enableCors({
-    origin: 'http://localhost:4200', // Allow requests from Angular frontend
+    origin: ['http://localhost:4200', 'http://localhost:4300'],
   });
 
   const port = process.env.PORT || 3000;

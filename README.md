@@ -33,3 +33,9 @@ The web app uses regular React since it's a simple app with no complex requireme
 
 If you click on a client name, the table will be filtered by that client.
 There is a ❌ emoji button to remove the filter.
+
+**If you have any issues feel free to reach out to me at 206-489-6538 or at him@dominiccobb.ai**
+
+Thanks for the consideration!
+
+Dominic
