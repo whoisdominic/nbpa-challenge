@@ -1,7 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 import { colorScheme } from '../constants';
 
-export const CSSReset = createGlobalStyle`
+const GlobalStyleProxy = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
@@ -34,3 +34,6 @@ export const CSSReset = createGlobalStyle`
     overflow-wrap: break-word;
   }
 `;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const CSSReset: any = GlobalStyleProxy;

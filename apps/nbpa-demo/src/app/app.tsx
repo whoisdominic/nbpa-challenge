@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import { CSSReset, Table } from './components';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ToastContainer } from 'react-toastify';
+import { CSSReset, Table } from './components';
 import { colorScheme } from './constants';
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ export function App() {
       <StyledApp>
         <Table />
       </StyledApp>
+      <ToastContainer position="top-center" theme="dark" />
     </QueryClientProvider>
   );
 }

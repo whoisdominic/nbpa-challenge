@@ -1,8 +1,8 @@
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 import { timesheetService } from '../../timesheetService';
-import { useMemo, useState } from 'react';
 import { CreateTimesheetDto, TimeEntry } from '../../types';
-
 interface TableEntry {
   name: string;
   client: string;
@@ -95,6 +95,12 @@ export function useDataTable() {
   const hasNextPage = useMemo(() => {
     return timesheets && timesheets.length === pageSize;
   }, [timesheets]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error('Error fetching timesheets, is the server running?');
+    }
+  }, [error]);
 
   return {
     isPending,
