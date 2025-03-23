@@ -6,7 +6,7 @@ Install dependencies
 yarn install
 ```
 
-_Note_ If you have any issue with yarn you can use npm instead but you'll need to install with legacy peer dependencies flag.
+_Note If you have any issue with yarn you can use npm instead but you'll need to install with legacy peer dependencies flag._
 
 In separate terminals run the following commands to start the server and the web app
 
