@@ -15,6 +15,8 @@ npx nx run nbpa-demo:preview
 You can then access the demo server at [http://localhost:3000/api](http://localhost:3000/api)
 Along with the web app at [http://localhost:4300/](http://localhost:4300/)
 
+**DOCS ARE AVAILABLE AT [http://localhost:3000/docs](http://localhost:3000/docs) You can use the Swagger UI to test the API**
+
 ## About the implementation
 
 This is an NX monorepo with a NestJS server and a React web app.

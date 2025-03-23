@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { PartialType } from '@nestjs/swagger';
 import { CreateTimesheetDto } from './CreateTimesheetDto.dto';
 
 export class UpdateTimesheetDto extends PartialType(CreateTimesheetDto) {}
