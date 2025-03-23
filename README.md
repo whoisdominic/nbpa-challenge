@@ -18,10 +18,13 @@ npx nx run nbpa-demo-server:serve --configuration=production
 npx nx run nbpa-demo:preview
 ```
 
-You can then access the demo server at [http://localhost:3000/api](http://localhost:3000/api)
-Along with the web app at [http://localhost:4300/](http://localhost:4300/)
+**Server [http://localhost:3000/api](http://localhost:3000/api)**
 
-**DOCS ARE AVAILABLE AT [http://localhost:3000/docs](http://localhost:3000/docs) You can use the Swagger UI to test the API**
+**Web App [http://localhost:4300/](http://localhost:4300/)**
+
+**Docs [http://localhost:3000/docs](http://localhost:3000/docs)**
+
+**You can use the Swagger UI to test the API!**
 
 ## About the implementation
 
@@ -33,6 +36,8 @@ The web app uses regular React since it's a simple app with no complex requireme
 
 If you click on a client name, the table will be filtered by that client.
 There is a ❌ emoji button to remove the filter.
+
+<br />
 
 **If you have any issues feel free to reach out to me at 206-489-6538 or at him@dominiccobb.ai**
 
