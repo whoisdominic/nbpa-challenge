@@ -1,6 +1,12 @@
 # NBPA challenge
 
-To run the demo you can use the following command:
+Install dependencies
+
+```bash
+yarn install
+```
+
+_Note_ If you have any issue with yarn you can use npm instead but you'll need to install with legacy peer dependencies flag.
 
 In separate terminals run the following commands to start the server and the web app
 
@@ -24,3 +30,6 @@ This is an NX monorepo with a NestJS server and a React web app.
 The server is using a SQLite database, I chose this because it's a lightweight database that doesn't require a server and is easy to setup.
 
 The web app uses regular React since it's a simple app with no complex requirements.
+
+If you click on a client name, the table will be filtered by that client.
+There is a ❌ emoji button to remove the filter.
